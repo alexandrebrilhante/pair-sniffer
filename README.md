@@ -1,5 +1,6 @@
 # pair-sniffer
 
+[![Python](https://github.com/alexandrebrilhante/pair-sniffer/actions/workflows/python-package.yml/badge.svg)](https://github.com/alexandrebrilhante/pair-sniffer/actions/workflows/python-package.yml)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pair-sniffer)
 ![GitHub](https://img.shields.io/github/license/alexandrebrilhante/pair-sniffer)
 
