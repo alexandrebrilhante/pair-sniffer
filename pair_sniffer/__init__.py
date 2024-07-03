@@ -101,4 +101,9 @@ class PairSniffer:
             and (price_divergence > self.price_divergence_threshold)
         )
 
-        return is_pairs_trade, mean_coherence, opposite_direction, price_divergence
+        return (
+            bool(is_pairs_trade),
+            float(mean_coherence),
+            float(opposite_direction),
+            float(price_divergence),
+        )
