@@ -6,7 +6,7 @@
 This package implements a pairs trading detection algorithm using Fast Fourier Transform (FFT) to analyze trading patterns between two stocks. The algorithm is designed to identify potential pairs trading activity by a specific broker.
 
 ## Features
-- Uses JAX for efficient numerical computations.
+- Uses `numpy` for efficient numerical computations.
 - Implements Fast Fourier Transform (FFT) for frequency domain analysis.
 - Calculates coherence to measure the correlation of trading patterns.
 - Configurable threshold for pairs trade detection.
@@ -17,7 +17,7 @@ pip install pair-sniffer
 ```
 
 ## Example
-The input data should be in the form of JAX arrays with the following fields: `[timestamp, symbol, volume, price, buy_broker, sell_broker]`.
+The input data should be in the form of `numpy` arrays with the following fields: `[timestamp, symbol, volume, price, buy_broker, sell_broker]`.
 
 ```python
 from pair_sniffer import PairSniffer
@@ -27,5 +27,6 @@ ko = generate_sample_data("KO")
 pep = generate_sample_data("PEP")
 
 ps = PairSniffer(ko, pep, 2)
-ps.detect_pairs_trade()
+
+is_pairs_trade, mean_coherence, opposite_direction, price_divergence = ps.detect_pairs_trade()
 ```

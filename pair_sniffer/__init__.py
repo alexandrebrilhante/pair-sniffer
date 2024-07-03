@@ -1,9 +1,8 @@
 from typing import Tuple
 
-import jax.numpy as jnp
+import numpy as np
 import pandas as pd
-from jax import jit
-from jax.numpy.fft import fft
+from numpy.fft import fft
 
 
 class PairSniffer:
@@ -34,7 +33,6 @@ class PairSniffer:
         self.opposite_direction_threshold = opposite_direction_threshold
         self.price_divergence_threshold = price_divergence_threshold
 
-    @jit
     def detect_pairs_trade(self) -> Tuple[bool, float, float, float]:
         """
         Detects pairs trades based on the given criteria.
@@ -55,20 +53,20 @@ class PairSniffer:
             | (self.data_y["sell_broker"] == self.broker)
         ]
 
-        x_net_position = jnp.where(
+        x_net_position = np.where(
             x_trades["buy_broker"] == self.broker,
             x_trades["volume"],
             -x_trades["volume"],
         )
 
-        y_net_position = jnp.where(
+        y_net_position = np.where(
             y_trades["buy_broker"] == self.broker,
             y_trades["volume"],
             -y_trades["volume"],
         )
 
-        x_price_changes = jnp.diff(x_trades["price"])
-        y_price_changes = jnp.diff(y_trades["price"])
+        x_price_changes = np.diff(x_trades["price"])
+        y_price_changes = np.diff(y_trades["price"])
 
         min_length = min(
             len(x_net_position),
@@ -85,21 +83,17 @@ class PairSniffer:
         x_fft = fft(x_net_position)
         y_fft = fft(y_net_position)
 
-        cross_correlation = jnp.abs(x_fft * jnp.conj(y_fft))
+        cross_correlation = np.abs(x_fft * np.conj(y_fft))
 
-        x_power = jnp.abs(x_fft) ** 2
-        y_power = jnp.abs(y_fft) ** 2
+        x_power = np.abs(x_fft) ** 2
+        y_power = np.abs(y_fft) ** 2
 
-        coherence = cross_correlation / jnp.sqrt(x_power * y_power)
-        mean_coherence = jnp.mean(coherence)
+        coherence = cross_correlation / np.sqrt(x_power * y_power)
+        mean_coherence = np.mean(coherence)
 
-        opposite_direction = jnp.mean(
-            jnp.sign(x_net_position) != jnp.sign(y_net_position)
-        )
+        opposite_direction = np.mean(np.sign(x_net_position) != np.sign(y_net_position))
 
-        price_divergence = jnp.mean(
-            jnp.sign(x_price_changes) != jnp.sign(y_price_changes)
-        )
+        price_divergence = np.mean(np.sign(x_price_changes) != np.sign(y_price_changes))
 
         is_pairs_trade = (
             (mean_coherence > self.coherence_threshold)
