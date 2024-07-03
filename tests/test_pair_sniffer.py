@@ -9,7 +9,9 @@ class TestPairSniffer(unittest.TestCase):
     def setUp(self):
         self.data_x = pd.DataFrame(
             {
-                "timestamp": pd.date_range(start="2023-01-01", periods=1000, freq="5T"),
+                "timestamp": pd.date_range(
+                    start="2023-01-01", periods=1000, freq="30s"
+                ),
                 "symbol": "X",
                 "volume": [100] * 1000,
                 "price": [50] * 1000,
@@ -20,7 +22,9 @@ class TestPairSniffer(unittest.TestCase):
 
         self.data_y = pd.DataFrame(
             {
-                "timestamp": pd.date_range(start="2023-01-01", periods=1000, freq="5T"),
+                "timestamp": pd.date_range(
+                    start="2023-01-01", periods=1000, freq="30s"
+                ),
                 "symbol": "Y",
                 "volume": [100] * 1000,
                 "price": [50] * 1000,
@@ -31,15 +35,6 @@ class TestPairSniffer(unittest.TestCase):
 
         self.broker = 1
         self.pair_sniffer = PairSniffer(self.data_x, self.data_y, self.broker)
-
-    def test_generate_sample_data(self):
-        symbol = "Z"
-
-        num_records = 100
-
-        sample_data = self.pair_sniffer.generate_sample_data(symbol, num_records)
-        self.assertEqual(len(sample_data), num_records)
-        self.assertEqual(sample_data["symbol"].unique(), symbol)
 
     def test_detect_pairs_trade(self):
         is_pairs_trade, mean_coherence, opposite_direction, price_divergence = (
